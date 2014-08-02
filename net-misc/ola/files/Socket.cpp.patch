@@ -1,0 +1,12 @@
+diff -uNr a/common/network/Socket.cpp b/common/network/Socket.cpp
+--- a/common/network/Socket.cpp	2014-02-16 01:14:23.000000000 +0100
++++ b/common/network/Socket.cpp	2014-03-07 16:22:11.000000000 +0100
+@@ -97,7 +97,7 @@
+   }
+   #endif
+
+-  #if HAVE_DECL_SO_REUSEPORT
++  #if 0
+   // turn on REUSEPORT if we can
+   int reuse_port_flag = 1;
+   int ok = setsockopt(m_fd,
