@@ -1,0 +1,49 @@
+#!/sbin/runscript
+
+DESC="AirPlay Synchronous Audio Service"
+EXEC=shairport-sync
+DAEMON=/usr/bin/$EXEC
+
+# We don't use the DAEMON_ARGS variable here because some of the identifiers may have spaces in them, and so are
+# impossible to pass as arguments.
+
+# Instead, we add the arguments directly to the relevant line in the do_start() function below
+
+PIDFILE=/var/run/$NAME.pid
+SCRIPTNAME=/etc/init.d/$NAME
+
+. /etc/conf.d/shairport-sync
+
+depend() {
+	need net
+	after bootmisc
+}
+
+start() {
+	OPTIONS="--daemon"
+
+	if [[ ! -z "$NAME" ]]; then OPTIONS="$OPTIONS --name=$NAME"; fi
+	
+	if [[ -z $NAME ]]
+	then
+		ebegin "Starting shairport"
+	else
+		ebegin "Starting shairport as $NAME"
+	fi
+
+	if [[ ! -z "$STUFFING" ]]; then OPTIONS="$OPTIONS --stuffing $STUFFING"; fi
+
+	if [[ ! -z "$MDNS" ]]; then OPTIONS="$OPTIONS --mdns $MDNS"; fi		
+
+	if [[ ! -z "$BACKEND" ]]; then OPTIONS="$OPTIONS --output=$BACKEND $BACKEND_OPTS"; fi
+	if [[ ! -z "$BACKEND_OPTS" ]]; then OPTIONS="$OPTIONS -- $BACKEND_OPTS"; fi
+
+	start-stop-daemon --start --pidfile $PIDFILE --exec $DAEMON -- $OPTIONS
+	eend $?
+}
+
+stop() {
+	ebegin "Stopping shairport"
+	start-stop-daemon --stop --retry=TERM/30/KILL/5 --pidfile $PIDFILE --name $EXEC
+	eend $?
+}

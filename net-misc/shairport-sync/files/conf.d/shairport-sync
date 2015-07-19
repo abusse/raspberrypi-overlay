@@ -1,0 +1,20 @@
+# /etc/conf.d/shairport: config file for /etc/init.d/shairport
+
+# The pidfile for the shairport daemon (--pidfile=$PIDFILE)
+#PIDFILE=/var/run/shairport.pid
+
+# The name shairport advertizes (-a $NAME)
+#NAME=myairplay
+
+# Set how to adjust current latency to match desired latency
+#STUFFING=basic
+
+# The backend to use (--output=$BACKEND -- $BACKEND_OPTS)
+# Shairport's help (shairport -h) shows all of the available
+# backends and their options
+#BACKEND=alsa
+#BACKEND_OPTS="-d default -t software ...some other opts..."
+
+# Force the use of MDNS to advertize the service
+# Shairport's help (shairport -h) shows all of the available mDNS backends
+#MDNS=avahi
