@@ -11,20 +11,37 @@ SRC_URI="https://github.com/mikebrady/shairport-sync/archive/${PV}.tar.gz"
 
 SLOT="0"
 KEYWORDS="~arm"
-IUSE="ao avahi pulseaudio"
+IUSE="avahi alsa +openrc systemd +openssl polarssl libsoxr"
 
-DEPEND="dev-libs/openssl \
-	media-libs/alsa-lib \
+DEPEND="openssl? ( dev-libs/openssl:= ) \
+	polarssl? ( net-libs/polarssl ) \
+	alsa? (	media-libs/alsa-lib:= ) \
 	dev-libs/libdaemon \
 	dev-libs/popt \
-	media-libs/soxr \
+	libsoxr? ( media-libs/soxr ) \
 	sys-auth/nss-mdns \
 	net-dns/avahi[dbus]"
 RDEPEND="${DEPEND}"
 
+REQUIRED_USE=" ^^ ( openssl polarssl )"
+
+src_prepare() {
+	eautoreconf
+}
+
 src_configure() {
-    econf --with-alsa \
+    econf $(use_with alsa) \
 	  $(use_with avahi ) \
-          --with-ssl=openssl \
-          --with-soxr
+          --with-ssl=$(usex openssl openssl polarssl) \
+          $(use_with libsoxr soxr) \
+          --without-systemv \
+          $(use_with systemd) \
+
+#          --with-configfile
+}
+
+src_install() {
+        emake DESTDIR="${D}" install
+
+        doinitd "${FILESDIR}/init.d/shairport-sync"
 }

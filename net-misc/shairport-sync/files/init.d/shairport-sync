@@ -12,8 +12,6 @@ DAEMON=/usr/bin/$EXEC
 PIDFILE=/var/run/$NAME.pid
 SCRIPTNAME=/etc/init.d/$NAME
 
-. /etc/conf.d/shairport-sync
-
 depend() {
 	need net
 	after bootmisc
@@ -30,13 +28,6 @@ start() {
 	else
 		ebegin "Starting shairport as $NAME"
 	fi
-
-	if [[ ! -z "$STUFFING" ]]; then OPTIONS="$OPTIONS --stuffing $STUFFING"; fi
-
-	if [[ ! -z "$MDNS" ]]; then OPTIONS="$OPTIONS --mdns $MDNS"; fi		
-
-	if [[ ! -z "$BACKEND" ]]; then OPTIONS="$OPTIONS --output=$BACKEND $BACKEND_OPTS"; fi
-	if [[ ! -z "$BACKEND_OPTS" ]]; then OPTIONS="$OPTIONS -- $BACKEND_OPTS"; fi
 
 	start-stop-daemon --start --pidfile $PIDFILE --exec $DAEMON -- $OPTIONS
 	eend $?

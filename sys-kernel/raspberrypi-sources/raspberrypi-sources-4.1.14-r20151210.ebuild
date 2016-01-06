@@ -19,6 +19,6 @@ HOMEPAGE="https://github.com/raspberrypi/linux"
 # MY_COMMIT="7423bc9"
 # https://github.com/raspberrypi/linux/tarball/${MY_COMMIT} ->
 #		raspberrypi-sources-${MY_COMMIT}.tar.gz
-SRC_URI="${KERNEL_URI}"
+SRC_URI="${KERNEL_URI} https://github.com/abusse/raspberrypi-overlay/raw/master/distfiles/${PF}.patch.xz"
 
 KEYWORDS="~arm"
